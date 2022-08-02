@@ -1,9 +1,12 @@
+from django import forms
+
 from django.shortcuts import render
 
 from . import util
 
 from django.http import Http404
 
+class NewPageForm(forms.Form):
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -33,4 +36,8 @@ def query(request):
         return render(request, "encyclopedia/index.html", {
             "entries": entries
         })
+def new_page(request):
+    return render(request, "encyclopedia/new_page.html", {
+
+    })
                
