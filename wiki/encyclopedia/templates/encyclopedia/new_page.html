@@ -7,12 +7,11 @@
 {% block body %}
     <h1>Creat new page</h1>
 
-    <form action = "{% url 'wiki:index' %}" method="post" id="new_page_form">
+    <form action = "{% url 'wiki:new_page' %}" method="post" id="new_page_form">
         {% csrf_token %}
-        <label>Title of a new page</label>
-        <input type="text" name="page_title">
-        <input type="submit">
+        {{ form }}
+        <input type="submit" value="creat new page">
     </form>
-    <textarea form="new_page_form" name="page_text">enter text...</textarea>
+    
     
 {% endblock %}
