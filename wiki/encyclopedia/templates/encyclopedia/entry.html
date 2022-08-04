@@ -8,4 +8,12 @@
 
     {{display_entry}}
 
+    <div>
+        <form action = "{% url 'wiki:edit' %}" method="GET">
+            {% csrf_token %}
+            <input type="hidden" name="entry_name" value = "{{entry_name}}">
+            <input type="submit" value="edit page">
+        </form>
+    </div>
+
 {% endblock %}

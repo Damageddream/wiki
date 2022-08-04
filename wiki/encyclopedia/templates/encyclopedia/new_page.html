@@ -7,6 +7,14 @@
 {% block body %}
     <h1>Creat new page</h1>
 
+    {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
     <form action = "{% url 'wiki:new_page' %}" method="post" id="new_page_form">
         {% csrf_token %}
         {{ form }}

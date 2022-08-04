@@ -8,9 +8,16 @@ from django.http import Http404, HttpResponseRedirect
 
 from django.urls import reverse
 
+from django.contrib import messages
+
+
+
 class NewPageForm(forms.Form):
     new_page_title = forms.CharField(label="New Page title")
     new_page_text = forms.CharField(widget=forms.Textarea)
+
+class EditForm(forms.Form):
+    edited_text = forms.CharField(widget=forms.Textarea)
 
     
 
@@ -48,10 +55,13 @@ def new_page(request):
         form = NewPageForm(request.POST)
         if form.is_valid():
             new_page_title = form.cleaned_data["new_page_title"]
-            print(type(new_page_title))
+            if new_page_title in util.list_entries():
+                messages.error(request, "entry with that title already exists")
+                return HttpResponseRedirect(reverse("wiki:new_page"))
             new_page_text = form.cleaned_data["new_page_text"]
             util.save_entry(new_page_title, new_page_text)
-            return HttpResponseRedirect(reverse("wiki:entry", args= f"{new_page_title}"))
+            return HttpResponseRedirect(reverse("wiki:entry", kwargs= {'entry_name':new_page_title}))
+            
 
         else:
             return render(request, "encyclopedia/new_page.html",{
@@ -59,5 +69,28 @@ def new_page(request):
             })
     return render(request, "encyclopedia/new_page.html", {
         "form":NewPageForm() 
+    })
+
+def edit(request):
+    edit_title = request.GET.get("entry_name")
+    print(edit_title)
+    if request.method == "POST":
+        print(edit_title)
+        form = EditForm(request.POST)
+        if form.is_valid():
+            edited_text = form.cleaned_data["edited_text"]
+            util.save_entry(edit_title, edited_text)
+            return HttpResponseRedirect(reverse("wiki:entry", kwargs= {'entry_name':edit_title}))
+        else:
+            return render(request, "encyclopedia/edit.html", {
+                "form":form
+            })
+
+
+
+
+    return render(request, "encyclopedia/edit.html",{
+        "form":EditForm()
+
     })
                
