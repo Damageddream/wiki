@@ -17,12 +17,14 @@ class NewPageForm(forms.Form):
     new_page_text = forms.CharField(widget=forms.Textarea)
 
 class EditForm(forms.Form):
-    edited_text = forms.CharField(widget=forms.Textarea)
+    edited_text = forms.CharField(widget=forms.Textarea(attrs={"placeholder":""}))
 
     
 
 
 def index(request):
+    if "entry" not in request.session:
+        request.session["entry"] = util.list_entries()
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
@@ -60,6 +62,7 @@ def new_page(request):
                 return HttpResponseRedirect(reverse("wiki:new_page"))
             new_page_text = form.cleaned_data["new_page_text"]
             util.save_entry(new_page_title, new_page_text)
+            request.session["entry"] = util.list_entries()
             return HttpResponseRedirect(reverse("wiki:entry", kwargs= {'entry_name':new_page_title}))
             
 
@@ -73,9 +76,7 @@ def new_page(request):
 
 def edit(request):
     edit_title = request.GET.get("entry_name")
-    print(edit_title)
     if request.method == "POST":
-        print(edit_title)
         form = EditForm(request.POST)
         if form.is_valid():
             edited_text = form.cleaned_data["edited_text"]
