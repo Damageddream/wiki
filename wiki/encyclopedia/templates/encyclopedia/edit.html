@@ -7,9 +7,9 @@
 {% block body %}
     <h1> Edit Page </h1>
 
-    <form action = "{% url 'wiki:edit' %}" method="post" id="edit_form">
+    <form action = "{{ entry_name }}" method="post" id="edit_form">
         {% csrf_token %}
-        {{ form }}
+        {{ form|safe }}
         <input type="submit" value="edit page">
     </form>
 {% endblock %}

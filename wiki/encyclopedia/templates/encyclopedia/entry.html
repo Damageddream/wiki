@@ -9,7 +9,7 @@
     {{display_entry|safe}}
 
     <div>
-        <form action = "{% url 'wiki:edit' %}" method="GET">
+        <form action = "{{ entry_name }}/edit" method="GET">
             {% csrf_token %}
             <input type="hidden" name="entry_name" value = "{{entry_name}}">
             <input type="submit" value="edit page">
