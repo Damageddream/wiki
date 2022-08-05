@@ -10,7 +10,9 @@ from django.urls import reverse
 
 from django.contrib import messages
 
+import random
 
+import markdown2
 
 class NewPageForm(forms.Form):
     new_page_title = forms.CharField(label="New Page title")
@@ -35,14 +37,14 @@ def entry(request, entry_name):
     else:
         return render(request, "encyclopedia/entry.html", {
             "entry_name": entry_name,
-            "display_entry": util.get_entry(entry_name)
+            "display_entry": markdown2.markdown(util.get_entry(entry_name))
         })
 def query(request): 
     query = request.GET.get('q')
     if query in util.list_entries():
         return render(request, "encyclopedia/entry.html", {
             "entry_name": query,
-            "display_entry": util.get_entry(query)
+            "display_entry": markdown2.markdown(util.get_entry(query))
         })
     else:
         entries = []
@@ -94,4 +96,12 @@ def edit(request):
         "form":EditForm()
 
     })
+
+def random_page(request):
+    entry_name = random.choice(util.list_entries())
+    return render(request, "encyclopedia/random.html", {
+            "entry_name": entry_name,
+            "display_entry": markdown2.markdown(util.get_entry(entry_name))
+        })
+
                
